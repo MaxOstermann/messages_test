@@ -24,4 +24,4 @@ class Message(models.Model):
 
 @receiver(post_save, sender=Message)
 def create_send_task(sender, instance, **kwargs):
-    send_mail(instance.id, eta=instance.send_date)
+    send_mail.apply_async(args=[instance.id], eta=instance.send_date)
