@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  celery:
+    build: '.'
+#    restart: always
+    volumes:
+      - .:/code
+    command: 'celery -A MessageTest worker --loglevel=ERROR'
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - '6379:6379'
